@@ -1,54 +1,158 @@
-# Gerenciador de Campeonato de Futsal
+# Campeonato de Futsal - API e Interface
 
-## Descrição do Projeto
+Este projeto consiste em uma API para gerenciamento de um campeonato de futsal, juntamente com uma interface básica para interagir com essa API.
 
-Este projeto tem como objetivo criar um sistema para o gerenciamento de um campeonato de futsal. A ideia é proporcionar uma plataforma que facilite a organização e acompanhamento das partidas, equipes e jogadores envolvidos no campeonato.
+## Instalação e Configuração
 
-## Funcionalidades
+### 1. Instalar Dependências
 
-### 1. Cadastrar Jogadores
+Certifique-se de ter o Node.js instalado.
 
-Os usuários podem cadastrar jogadores, incluindo informações como nome, posição, idade e equipe à qual pertencem.
+```bash
+npm install
+```
 
-### 2. Cadastrar Equipes
+### 2. Configuração do Banco de Dados
+Configure o arquivo config.json na pasta config com as credenciais do seu banco de dados MySQL:
 
-O sistema permite o cadastro de equipes participantes do campeonato, com detalhes como nome, treinador, e lista de jogadores.
+```
+{
+  "development": {
+    "username": "seu_usuario",
+    "password": "sua_senha",
+    "database": "campeonatofutsal",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "username": "seu_usuario_teste",
+    "password": "sua_senha_teste",
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "seu_usuario_producao",
+    "password": "sua_senha_producao",
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
+```
 
-### 3. Cadastrar Partidas Realizadas
+### 3. Executar as Migrações
+Execute o seguinte comando para criar as tabelas no banco de dados:
+```
+npx sequelize-cli db:migrate
+```
 
-É possível registrar as partidas realizadas, incluindo data, equipes envolvidas, placar final e destaques individuais.
+### Executando o Servidor:
+```
+npm start
+```
 
-### 4. Visualização da Tabela do Campeonato
+O servidor estará rodando em http://localhost:3000.
 
-O sistema gera automaticamente uma tabela do campeonato, exibindo a classificação das equipes com base nos resultados das partidas.
+# Exemplos de Requisições API
 
-## Problemas Conhecidos
+Aqui estão alguns exemplos de requisições HTTP para as rotas disponíveis na sua API, utilizando o Postman.
 
-Infelizmente, durante a implementação, encontrei alguns problemas na montagem das rotas e controllers, o que impactou o funcionamento completo do sistema. Como resultado, algumas funcionalidades podem não estar operacionais ou podem não apresentar o desempenho desejado.
+## Autenticação
 
-## Entrega para Análise
+### Rota: Autenticação (geração de token JWT)
+- **Método:** POST
+- **URL:** `http://localhost:3000/autenticacao`
+- **Corpo (Body):** JSON
+  ```json
+  {
+      "username": "admin",
+      "password": "admin"
+  }
 
-Mesmo com os desafios encontrados, estou entregando o projeto para análise. Agradeço pela compreensão e estou disponível para fornecer mais detalhes sobre a implementação, bem como para realizar correções e melhorias conforme necessário.
+## Jogadores
 
-## Requisitos do Sistema
+### Rota: Listar Jogadores
+- **Método:** GET
+- **URL:** `http://localhost:3000/jogadores`
 
-- Node.js
-- Banco de dados (MySQL)
-- Dependências do projeto (verifique o arquivo `package.json`)
+### Rota: Cadastrar Jogador
+- **Método:** POST
+- **URL:** `http://localhost:3000/jogadores`
+- **Corpo (Body):** JSON
+  ```json
+  {
+    "nome": "Novo Jogador",
+    "numeroCamiseta": 10
+  }
 
-## Instruções de Instalação
+## Rota: Editar Jogador
+- **Método:** POST
+- **URL:** `http://localhost:3000/jogadores/:id` (Substitua :id pelo ID do jogador)
+- **Corpo (Body):** JSON
+  ```json
+  {
+    "nome": "Novo Nome Jogador",
+    "numeroCamiseta": 7
+  }
 
-1. Clone o repositório: `git clone https://github.com/Fro1s/ProjetoFutsal.git`
-2. Acesse o diretório do projeto: `cd ProjetoFutsal`
-3. Instale as dependências: `npm install`
-4. Configure o banco de dados de acordo com as informações no arquivo `config.js`
-5. Execute o aplicativo: `npm start` ou `node app.js`
+## Classificação
 
-## Contato
+### Rota: Listar Classificação
+- **Método:** POST
+- **URL:** `http://localhost:3000/classificacao`
 
-Em caso de dúvidas ou feedback, entre em contato pelo email: matheuscosta1150@gmail.com
+## Partidas
 
-Obrigado pela oportunidade de desenvolver este projeto e pela consideração na avaliação do mesmo.
-Atenciosamente,
+## Rota: Listar Partidas
+- **Método:** POST
+- **URL:** `http://localhost:3000/partidas`
 
-Matheus Frois.
+## Rota: Cadastrar Partida
+- **Método:** POST
+- **URL:** `http://localhost:3000/partidas` 
+- **Corpo (Body):** JSON
+  ```json
+  {
+    "data": "2023-12-19",
+    "horarioInicio": "15:00",
+    "horarioTermino": "17:00",
+    "idTime1": 1,
+    "idTime2": 2,
+    "placar": "2-1"
+  }
+
+## Times
+
+## Rota: Listar Times
+- **Método:** POST
+- **URL:** `http://localhost:3000/times`
+
+## Rota: Cadastrar Time
+- **Método:** POST
+- **URL:** `http://localhost:3000/times`
+- **Corpo (Body):** JSON
+  ```json
+  {
+    "nome": "Novo Time FC"
+  }
+
+## Rota: Adicionar jogador a um time
+- **Método:** PUT
+- **URL:** `http://localhost:3000/times/adicionar-jogador`
+- **Corpo (Body):** JSON
+  ```json
+  {
+    "idTime": 1,
+    "idJogador": 3
+  }
+
+## Rota: Excluir Jogador de um Time
+- **Método:** PUT
+- **URL:** `http://localhost:3000/times/excluir-jogador`
+- **Corpo (Body):** JSON
+  ```json
+  {
+    "idTime": 1,
+    "idJogador": 3
+  }
